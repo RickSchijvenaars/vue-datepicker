@@ -28,21 +28,11 @@ export const sanitizeDateToLocal = (date: MaybeDate, tz?: TimeZoneConfig, reset?
     return tz.exactMatch ? getDateInTz(date, tz, reset) : localToTz(newDate, tz.timezone);
 };
 
-const isDST = (date: Date) => {
-    const january = new Date(date.getFullYear(), 0, 1);
-
-    const januaryOffset = january.getTimezoneOffset();
-    const dateOffset = date.getTimezoneOffset();
-
-    return dateOffset < januaryOffset;
-};
-
-export const getTimezoneOffset = (timezone?: string, localDate?: Date) => {
+export const getTimezoneOffset = (timezone?: string, date: Date = new Date()): number => {
     if (!timezone) return 0;
-    const date = new Date();
-    const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+
     const specificDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
-    const dateToOffset = isDST(localDate ?? specificDate) ? specificDate : (localDate ?? specificDate);
-    const dstOffset = dateToOffset.getTimezoneOffset() / 60;
-    return (+utcDate - +specificDate) / (1000 * 60 * 60) - dstOffset;
+    const offsetHours = (date.getTime() - specificDate.getTime()) / (1000 * 60 * 60);
+
+    return offsetHours;
 };
