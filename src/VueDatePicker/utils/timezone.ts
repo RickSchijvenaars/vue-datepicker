@@ -28,7 +28,7 @@ export const sanitizeDateToLocal = (date: MaybeDate, tz?: TimeZoneConfig, reset?
     return tz.exactMatch ? getDateInTz(date, tz, reset) : localToTz(newDate, tz.timezone);
 };
 
-export const getTimezoneOffset = (timezone?: string, date: Date = new Date()): number => {
+export const getTimezoneOffset = (timezone?: string, date: Date = new Date()) => {
     if (!timezone) return 0;
 
     const specificDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
